@@ -30,7 +30,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="pt-32 pb-16 min-h-screen bg-premium-light flex items-center justify-center px-4">
+    <div className="pt-32 pb-16 min-h-screen bg-premium-light flex items-center justify-center px-4 animate-fade-in">
       <div
         
         

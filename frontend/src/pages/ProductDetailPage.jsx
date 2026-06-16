@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Heart, Star, Pencil, Trash2 } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
+import ScrollReveal from '../components/ui/ScrollReveal';
 import ProductCard from '../components/product/ProductCard';
 import useCartStore from '../store/useCartStore';
 import useWishlistStore from '../store/useWishlistStore';
@@ -215,7 +216,7 @@ const ProductDetailPage = () => {
   const inWishlist = isInWishlist(product._id);
 
   return (
-    <div className="pt-24 pb-16 bg-white min-h-screen">
+    <div className="pt-24 pb-16 bg-white min-h-screen animate-fade-in">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-sm text-gray-500 mb-8 flex gap-2">
@@ -314,186 +315,194 @@ const ProductDetailPage = () => {
 
       {/* Related Products Section */}
       {relatedProducts.length> 0 && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
-          <h2 className="text-2xl md:text-3xl font-bold text-premium-dark mb-10 border-t border-gray-200 pt-12 text-center">You Might Also Like</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {relatedProducts.map(rp => (
-              <ProductCard key={rp._id} product={rp} />
-            ))}
+        <ScrollReveal>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
+            <h2 className="text-2xl md:text-3xl font-bold text-premium-dark mb-10 border-t border-gray-200 pt-12 text-center">You Might Also Like</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {relatedProducts.map((rp, idx) => (
+                <ScrollReveal key={rp._id} delay={idx * 100}>
+                  <ProductCard product={rp} />
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
       )}
 
       {/* Customer Reviews Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 mb-24">
-        <div className="border-t border-gray-200 pt-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-premium-dark mb-8">Customer Reviews</h2>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Left Column: Summary & Form */}
-            <div className="lg:col-span-1 space-y-8">
-              {/* Rating Summary & Bars */}
-              <div>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="text-5xl font-bold text-premium-dark">{avgRating || '–'}</div>
-                  <div>
-                    <div className="flex text-yellow-400 mb-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={20} fill={i < Math.floor(avgRating) ? "currentColor" : "none"} className={i < Math.floor(avgRating) ? "" : "text-gray-300"} />
-                      ))}
+      <ScrollReveal>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 mb-24">
+          <div className="border-t border-gray-200 pt-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-premium-dark mb-8">Customer Reviews</h2>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+              {/* Left Column: Summary & Form */}
+              <div className="lg:col-span-1 space-y-8">
+                {/* Rating Summary & Bars */}
+                <div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="text-5xl font-bold text-premium-dark">{avgRating || '–'}</div>
+                    <div>
+                      <div className="flex text-yellow-400 mb-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} size={20} fill={i < Math.floor(avgRating) ? "currentColor" : "none"} className={i < Math.floor(avgRating) ? "" : "text-gray-300"} />
+                        ))}
+                      </div>
+                      <p className="text-sm text-gray-500">{reviews.length} global ratings</p>
                     </div>
-                    <p className="text-sm text-gray-500">{reviews.length} global ratings</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    {[5, 4, 3, 2, 1].map((star) => (
+                      <div key={star} className="flex items-center gap-3">
+                        <span className="text-sm font-medium text-premium-dark w-12">{star} star</span>
+                        <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-yellow-400 rounded-full transition-all duration-300" 
+                            style={{ width: `${distPercent[star]}%` }}
+                          />
+                        </div>
+                        <span className="text-sm text-gray-500 w-10 text-right">{distPercent[star]}%</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  {[5, 4, 3, 2, 1].map((star) => (
-                    <div key={star} className="flex items-center gap-3">
-                      <span className="text-sm font-medium text-premium-dark w-12">{star} star</span>
-                      <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-yellow-400 rounded-full transition-all duration-300" 
-                          style={{ width: `${distPercent[star]}%` }}
-                        />
-                      </div>
-                      <span className="text-sm text-gray-500 w-10 text-right">{distPercent[star]}%</span>
+                {/* Submit Review Form */}
+                <div className="border-t border-gray-200 pt-8">
+                  <h3 className="text-xl font-bold text-premium-dark mb-4">Review this product</h3>
+                  
+                  {!user ? (
+                    <div className="text-center py-6">
+                      <p className="text-gray-600 mb-4">Sign in to write a review</p>
+                      <Link to="/login">
+                        <Button className="w-full">Sign In</Button>
+                      </Link>
                     </div>
-                  ))}
+                  ) : (
+                    <>
+                      <p className="text-sm text-gray-600 mb-4">Share your thoughts with other customers</p>
+                      {reviewError && <p className="text-red-500 text-sm mb-3">{reviewError}</p>}
+                      <form onSubmit={handleReviewSubmit} className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-premium-dark mb-2">Overall rating</label>
+                          <div className="flex text-yellow-400 gap-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star 
+                                key={star} 
+                                size={24} 
+                                className="cursor-pointer transition-colors"
+                                fill={star <= (hoverRating || newReviewRating) ? "currentColor" : "none"}
+                                color={star <= (hoverRating || newReviewRating) ? "#facc15" : "#d1d5db"}
+                                onMouseEnter={() => setHoverRating(star)}
+                                onMouseLeave={() => setHoverRating(0)}
+                                onClick={() => setNewReviewRating(star)}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-premium-dark mb-2">Write your review</label>
+                          <textarea 
+                            required
+                            rows="4"
+                            placeholder="What did you like or dislike?"
+                            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-premium-dark focus:border-premium-dark"
+                            value={newReviewText}
+                            onChange={(e) => setNewReviewText(e.target.value)}></textarea>
+                        </div>
+                        <Button type="submit" className="w-full">Submit Review</Button>
+                      </form>
+                    </>
+                  )}
                 </div>
               </div>
 
-              {/* Submit Review Form */}
-              <div className="border-t border-gray-200 pt-8">
-                <h3 className="text-xl font-bold text-premium-dark mb-4">Review this product</h3>
-                
-                {!user ? (
-                  <div className="text-center py-6">
-                    <p className="text-gray-600 mb-4">Sign in to write a review</p>
-                    <Link to="/login">
-                      <Button className="w-full">Sign In</Button>
-                    </Link>
+              {/* Right Column: Review List */}
+              <div className="lg:col-span-2">
+                {reviews.length === 0 ? (
+                  <div className="text-center py-16 text-gray-500">
+                    <p className="text-lg">No reviews yet. Be the first to review this product!</p>
                   </div>
                 ) : (
-                  <>
-                    <p className="text-sm text-gray-600 mb-4">Share your thoughts with other customers</p>
-                    {reviewError && <p className="text-red-500 text-sm mb-3">{reviewError}</p>}
-                    <form onSubmit={handleReviewSubmit} className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-premium-dark mb-2">Overall rating</label>
-                        <div className="flex text-yellow-400 gap-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star 
-                              key={star} 
-                              size={24} 
-                              className="cursor-pointer transition-colors"
-                              fill={star <= (hoverRating || newReviewRating) ? "currentColor" : "none"}
-                              color={star <= (hoverRating || newReviewRating) ? "#facc15" : "#d1d5db"}
-                              onMouseEnter={() => setHoverRating(star)}
-                              onMouseLeave={() => setHoverRating(0)}
-                              onClick={() => setNewReviewRating(star)}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-premium-dark mb-2">Write your review</label>
-                        <textarea 
-                          required
-                          rows="4"
-                          placeholder="What did you like or dislike?"
-                          className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-premium-dark focus:border-premium-dark"
-                          value={newReviewText}
-                          onChange={(e) => setNewReviewText(e.target.value)}></textarea>
-                      </div>
-                      <Button type="submit" className="w-full">Submit Review</Button>
-                    </form>
-                  </>
+                  <div className="space-y-6">
+                    {reviews.map((review, idx) => {
+                      const isOwner = user && review.user && (review.user._id === user._id);
+                      const isEditing = editingReview === review._id;
+
+                      return (
+                        <ScrollReveal key={review._id} delay={idx * 150}>
+                          <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-premium-dark text-white flex items-center justify-center font-bold">
+                                  {review.user?.name?.charAt(0) || '?'}
+                                </div>
+                                <div>
+                                  <h4 className="font-semibold text-premium-dark">{review.user?.name || 'Anonymous'}</h4>
+                                  <span className="text-xs text-gray-500">Reviewed on {new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                                </div>
+                              </div>
+                              {isOwner && !isEditing && (
+                                <div className="flex gap-2">
+                                  <button onClick={() => startEditing(review)} className="p-2 text-gray-400 hover:text-premium-dark transition-colors rounded-lg hover:bg-gray-200" title="Edit">
+                                    <Pencil size={16} />
+                                  </button>
+                                  <button onClick={() => handleDeleteReview(review._id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50" title="Delete">
+                                    <Trash2 size={16} />
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+
+                            {isEditing ? (
+                              <div className="space-y-3">
+                                <div className="flex text-yellow-400 gap-1">
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <Star 
+                                      key={star} 
+                                      size={20} 
+                                      className="cursor-pointer"
+                                      fill={star <= (editHover || editRating) ? "currentColor" : "none"}
+                                      color={star <= (editHover || editRating) ? "#facc15" : "#d1d5db"}
+                                      onMouseEnter={() => setEditHover(star)}
+                                      onMouseLeave={() => setEditHover(0)}
+                                      onClick={() => setEditRating(star)}
+                                    />
+                                  ))}
+                                </div>
+                                <textarea 
+                                  rows="3"
+                                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-premium-dark"
+                                  value={editText}
+                                  onChange={(e) => setEditText(e.target.value)}
+                                />
+                                <div className="flex gap-2">
+                                  <Button size="sm" onClick={() => handleEditSave(review._id)}>Save</Button>
+                                  <Button size="sm" variant="outline" onClick={() => setEditingReview(null)}>Cancel</Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <>
+                                <div className="flex text-yellow-400 mb-3">
+                                  {[...Array(5)].map((_, i) => (
+                                    <Star key={i} size={16} fill={i < review.rating ? "currentColor" : "none"} className={i < review.rating ? "" : "text-gray-300"} />
+                                  ))}
+                                </div>
+                                <p className="text-gray-700 leading-relaxed">"{review.text}"</p>
+                              </>
+                            )}
+                          </div>
+                        </ScrollReveal>
+                      );
+                    })}
+                  </div>
                 )}
               </div>
             </div>
-
-            {/* Right Column: Review List */}
-            <div className="lg:col-span-2">
-              {reviews.length === 0 ? (
-                <div className="text-center py-16 text-gray-500">
-                  <p className="text-lg">No reviews yet. Be the first to review this product!</p>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {reviews.map((review) => {
-                    const isOwner = user && review.user && (review.user._id === user._id);
-                    const isEditing = editingReview === review._id;
-
-                    return (
-                      <div key={review._id} className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-premium-dark text-white flex items-center justify-center font-bold">
-                              {review.user?.name?.charAt(0) || '?'}
-                            </div>
-                            <div>
-                              <h4 className="font-semibold text-premium-dark">{review.user?.name || 'Anonymous'}</h4>
-                              <span className="text-xs text-gray-500">Reviewed on {new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-                            </div>
-                          </div>
-                          {isOwner && !isEditing && (
-                            <div className="flex gap-2">
-                              <button onClick={() => startEditing(review)} className="p-2 text-gray-400 hover:text-premium-dark transition-colors rounded-lg hover:bg-gray-200" title="Edit">
-                                <Pencil size={16} />
-                              </button>
-                              <button onClick={() => handleDeleteReview(review._id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50" title="Delete">
-                                <Trash2 size={16} />
-                              </button>
-                            </div>
-                          )}
-                        </div>
-
-                        {isEditing ? (
-                          <div className="space-y-3">
-                            <div className="flex text-yellow-400 gap-1">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star 
-                                  key={star} 
-                                  size={20} 
-                                  className="cursor-pointer"
-                                  fill={star <= (editHover || editRating) ? "currentColor" : "none"}
-                                  color={star <= (editHover || editRating) ? "#facc15" : "#d1d5db"}
-                                  onMouseEnter={() => setEditHover(star)}
-                                  onMouseLeave={() => setEditHover(0)}
-                                  onClick={() => setEditRating(star)}
-                                />
-                              ))}
-                            </div>
-                            <textarea 
-                              rows="3"
-                              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-1 focus:ring-premium-dark"
-                              value={editText}
-                              onChange={(e) => setEditText(e.target.value)}
-                            />
-                            <div className="flex gap-2">
-                              <Button size="sm" onClick={() => handleEditSave(review._id)}>Save</Button>
-                              <Button size="sm" variant="outline" onClick={() => setEditingReview(null)}>Cancel</Button>
-                            </div>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="flex text-yellow-400 mb-3">
-                              {[...Array(5)].map((_, i) => (
-                                <Star key={i} size={16} fill={i < review.rating ? "currentColor" : "none"} className={i < review.rating ? "" : "text-gray-300"} />
-                              ))}
-                            </div>
-                            <p className="text-gray-700 leading-relaxed">"{review.text}"</p>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
           </div>
         </div>
-      </div>
+      </ScrollReveal>
 
       {/* Size Guide Modal */}
       <Modal isOpen={isSizeGuideOpen} onClose={() => setIsSizeGuideOpen(false)} title="Size Guide">

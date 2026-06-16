@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, User, MessageCircle } from 'lucide-react';
+import ScrollReveal from '../ui/ScrollReveal';
 
 // Static fallback reviews
 const FALLBACK_REVIEWS = [
@@ -108,8 +109,10 @@ const FeaturedReviews = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {reviews.map((review) => (
-            <ReviewCard key={review._id} review={review} />
+          {reviews.map((review, idx) => (
+            <ScrollReveal key={review._id} delay={idx * 150}>
+              <ReviewCard review={review} />
+            </ScrollReveal>
           ))}
         </div>
       </div>

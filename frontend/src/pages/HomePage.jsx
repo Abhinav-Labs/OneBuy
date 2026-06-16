@@ -5,7 +5,7 @@ import ProductGrid from '../components/home/ProductGrid';
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen bg-premium-light">
+    <div className="min-h-screen bg-premium-light animate-fade-in">
       <HeroSection />
       <ProductGrid />
       <FeaturedReviews />

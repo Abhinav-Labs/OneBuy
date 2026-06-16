@@ -6,6 +6,19 @@
   --color-premium-accent: #B85042;
   --color-premium-neutral: #FFEBE8;
   --font-sans: 'Plus Jakarta Sans', sans-serif;
+
+  --animate-fade-in: fade-in 0.4s ease-out forwards;
+  --animate-fade-up: fade-up 0.5s ease-out forwards;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
 
 @layer base {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ProductCard from '../product/ProductCard';
+import ScrollReveal from '../ui/ScrollReveal';
 import fallbackProducts from '../../data/fallbackProducts';
 
 const ProductGrid = ({ showOnlyHero = true, title = "Hero Products" }) => {
@@ -43,8 +44,10 @@ const ProductGrid = ({ showOnlyHero = true, title = "Hero Products" }) => {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          {displayedProducts.map(product => (
-            <ProductCard key={product._id} product={product} />
+          {displayedProducts.map((product, idx) => (
+            <ScrollReveal key={product._id} delay={idx * 100}>
+              <ProductCard product={product} />
+            </ScrollReveal>
           ))}
         </div>
       </div>
