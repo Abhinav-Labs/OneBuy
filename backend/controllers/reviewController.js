@@ -137,7 +137,24 @@ const getFeaturedReviews = async (req, res) => {
       .populate('product', 'name image')
       .sort({ createdAt: -1 })
       .limit(6);
-    res.json(reviews);
+      
+    // Convert to plain objects to modify them
+    const plainReviews = reviews.map(r => r.toObject());
+    
+    // Fetch all products to randomise the associated product for the UI presentation
+    const allProducts = await Product.find({}).select('name image _id');
+    
+    if (allProducts.length > 0) {
+      // Shuffle products
+      const shuffled = [...allProducts].sort(() => 0.5 - Math.random());
+      
+      // Assign a random product to each review
+      plainReviews.forEach((review, idx) => {
+        review.product = shuffled[idx % shuffled.length];
+      });
+    }
+
+    res.json(plainReviews);
   } catch (error) {
     console.error('getFeaturedReviews error:', error);
     res.status(500).json({ message: 'Could not fetch featured reviews.' });

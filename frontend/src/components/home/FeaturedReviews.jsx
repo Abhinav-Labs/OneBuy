@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, User, MessageCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import ScrollReveal from '../ui/ScrollReveal';
 
 // Static fallback reviews
@@ -60,7 +61,13 @@ const ReviewCard = ({ review }) => (
           {review.user?.name || 'Anonymous'}
         </p>
         <p className="text-xs text-premium-accent truncate">
-          Purchased: {review.productName}
+          Purchased: {review.productId ? (
+            <Link to={`/product/${review.productId}`} className="hover:underline">
+              {review.productName}
+            </Link>
+          ) : (
+            review.productName
+          )}
         </p>
       </div>
     </div>
@@ -83,6 +90,7 @@ const FeaturedReviews = () => {
               text: r.text,
               user: r.user,
               productName: r.product?.name || 'Unknown Product',
+              productId: r.product?._id,
             }));
             setReviews(mappedReviews);
           }
