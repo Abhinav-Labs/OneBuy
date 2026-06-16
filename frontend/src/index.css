@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-premium-dark: #2A2A2A;
+  --color-premium-light: #EDF4F2;
+  --color-premium-accent: #B85042;
+  --color-premium-neutral: #FFEBE8;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-premium-light text-premium-dark antialiased;
+  }
+}
