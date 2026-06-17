@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+const Modal = ({ isOpen, onClose, title, children, noPadding = false }) => {
   
   // Prevent scrolling when modal is open
   useEffect(() => {
@@ -24,7 +24,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
             
             
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md animate-fade-in"
           />
           
           <div
@@ -32,17 +32,27 @@ const Modal = ({ isOpen, onClose, title, children }) => {
             
             
             
-            className="relative w-full max-w-2xl bg-premium-light rounded-xl shadow-2xl overflow-hidden z-10">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              {title && <h2 className="text-2xl font-bold text-premium-dark">{title}</h2>}
+            className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden z-10 animate-fade-up">
+            {title && (
+              <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                <h2 className="text-2xl font-bold text-premium-dark">{title}</h2>
+                <button
+                  onClick={onClose}
+                  className="p-2 text-gray-500 hover:text-premium-dark transition-colors rounded-full hover:bg-gray-100">
+                  <X size={24} />
+                </button>
+              </div>
+            )}
+            
+            {!title && (
               <button
                 onClick={onClose}
-                className="p-2 text-gray-500 hover:text-premium-dark transition-colors rounded-full hover:bg-gray-100">
+                className="absolute top-4 right-4 z-20 p-2 text-gray-500 hover:text-premium-dark transition-colors bg-white/80 backdrop-blur-sm rounded-full hover:bg-white shadow-sm">
                 <X size={24} />
               </button>
-            </div>
+            )}
             
-            <div className="p-6">
+            <div className={noPadding ? '' : 'p-6'}>
               {children}
             </div>
           </div>
